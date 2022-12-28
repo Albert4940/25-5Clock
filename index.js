@@ -14,8 +14,17 @@ $(document).ready(function(){
           inputEl.val(value - 1); 
     }
   
-  $("button.btn-length").click(function(){    
-    lengthHandle($(this))
-    
-  })
+    function reset(){
+        $("#break-length").val("5");
+        $("#session-length").val("25");
+        $("time-left").val("25:00");
+      }
+
+    $("button.btn-length").click(function(){    
+        lengthHandle($(this))        
+    })
+
+    $("#reset").click(reset);
+
+ 
 })
