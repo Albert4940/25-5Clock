@@ -2,6 +2,7 @@
 $(document).ready(function(){  
         putMin(25)
         putSec(0)
+    var $timerLabel = $("#timer-label");
      //
      function addSessionLength(session){
         $("#time-left").val(fixedInt(session) + ":00");
@@ -10,11 +11,11 @@ $(document).ready(function(){
     function fixedInt(num){
         return (num < 10) ? '0' + num : num;
     }
-    console.log(fixedInt(9))
+   
     //
     function lengthHandle(el){
       const type = el.text();
-      const idElement = el.attr("id").split("-")[0]
+      const idElement = el.attr("id").split("-")[0];
       const inputEl = el.siblings("input");
       var value = Number(inputEl.val());
     
@@ -25,8 +26,8 @@ $(document).ready(function(){
           value --; 
         
           inputEl.val(value); 
-       
-        if(idElement =="session")
+      
+        if($timerLabel.text().toLowerCase() == idElement)
           addSessionLength(value)
     }
   
@@ -58,16 +59,28 @@ $(document).ready(function(){
 
     
     function countDown(){
+        
         var ss = getSec();
-        if(ss == 0)
-            ss = 60;
-        
-         ss -= 1;
-         putSec(ss);
-        
-        if(ss == 0)
+        if(ss == 0){
+            ss = 6;
             if(getMin() != 0)
-              putMin(getMin() - 1);           
+              putMin(getMin() - 1);
+        }      
+        
+         ss -= 1;         
+         putSec(ss);
+
+         if(ss == 0 && getMin() == 0){
+            if($timerLabel.text() == "Session"){
+                $timerLabel.text("Break");
+                putMin(Number($("#break-length").val()))
+            }else{
+                $timerLabel.text("Session");
+                putMin(Number($("#session-length").val()))
+            }
+         }
+             
+              
        
     }
 
@@ -80,13 +93,13 @@ $(document).ready(function(){
     function reset(){
         $("#break-length").val("5");
         $("#session-length").val("25");
-
+        $timerLabel.text("Session");
         if(!isStarting)
         isStarting = !isStarting;
 
         clearInterval(id);
         putMin(25)
-       putSec(0);
+        putSec(0);
       }
 
     $("#start_stop").click(function(){ 
