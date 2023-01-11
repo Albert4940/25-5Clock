@@ -1,5 +1,7 @@
 // !! IMPORTANT README:
 $(document).ready(function(){  
+    const audio = document.getElementById("beep");
+    audio.play();
         putMin(25)
         putSec(0)
     var $timerLabel = $("#timer-label");
@@ -62,7 +64,7 @@ $(document).ready(function(){
         
         var ss = getSec();
         if(ss == 0){
-            ss = 6;
+            ss = 60;
             if(getMin() != 0)
               putMin(getMin() - 1);
         }      
