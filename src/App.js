@@ -1,22 +1,41 @@
-import React from 'react';
+import React, {createRef} from 'react';
 import { SetTimer } from './components/SetTimer';
 import { Footer } from './components/Footer';
-import { Audio } from './components/Audio';
+import { Audio} from './components/Audio';
+
 class App extends React.Component{
   constructor(props){
     super(props)
+    this.audioRef = createRef();
     this.state = {
       breakCount: 5,
       sessionCount: 25,
       clockCount: 25*60,
       currentTimer: 'Session',
       isPlaying: false,
-      loop: undefined
+      loop: undefined,
+      //Audio: document.getElementById("beep")
     }
   }
   
+  playAudio = () => {
+    if(this.audioRef.current)
+      this.audioRef.current.play();
+  }
+
+  pauseAudio = () => {
+    if(this.audioRef.current)
+      this.audioRef.current.pause()
+  }
+
+  resetTimeAudio = () => {
+    if(this.audioRef.current)
+      this.audioRef.current.currentTime = 0
+  }
+
   handlePlayPause = () => {
-    const {isPlaying} = this.state;
+    const {isPlaying, Audio} = this.state;
+    
     if(isPlaying){
       clearInterval(this.state.loop);
       
@@ -38,7 +57,7 @@ class App extends React.Component{
                 currentTimer: currentTimer === 'Session' ? 'Break' : 'Session',
                 clockCount: (currentTimer === 'Session') ? (breakCount * 60) : (sessionCount * 60)
               })
-              Audio.play();
+              this.playAudio();
             }else{
               this.setState({
                 clockCount: clockCount - 1
@@ -64,10 +83,12 @@ class App extends React.Component{
         loop: undefined
     })
     
-    Audio.pause();
-    Audio.currentTime = 0;
+    this.pauseAudio();    
+    this.resetTimeAudio();
+
     clearInterval(this.state.loop)
   }
+
   componentWillUnmount(){
     clearInterval(this.state.loop);
     this.setState({
@@ -197,7 +218,7 @@ handleBreakDecrease = () => {
            
           </div>
         </div>
-        <Audio />
+        <Audio ref={this.audioRef}/>
         <Footer />
       </div>
     );
